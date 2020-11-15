@@ -1,0 +1,6 @@
+# Project Files
+.idea
+.gradle
+
+# Compiled Files
+build
