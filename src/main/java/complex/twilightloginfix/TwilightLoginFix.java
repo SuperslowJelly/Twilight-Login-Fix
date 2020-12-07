@@ -9,6 +9,7 @@ import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.game.state.GameStartedServerEvent;
 import org.spongepowered.api.event.network.ClientConnectionEvent;
 import org.spongepowered.api.plugin.Plugin;
+import org.spongepowered.api.world.World;
 
 @Plugin(
         id = "twilight-login-fix",
@@ -30,14 +31,15 @@ public class TwilightLoginFix {
     }
 
     @Listener
-    public void onPlayerJoin(ClientConnectionEvent.Disconnect event) {
+    public void onPlayerLeave(ClientConnectionEvent.Disconnect event) {
         Player player = event.getTargetEntity();
-        logger.info("Player disconnection detected!\nPlayer: " + player.getName() + "\nWorld: " + player.getWorld().getName() + "\nLocation: " + player.getLocation().getPosition());
-        if (Objects.equal(player.getWorld().getName(), "DIM7") || (Objects.equal(player.getWorld().getName(), "DIM-777"))) {
-            player.setLocation((Sponge.getServer().getWorld("world").orElse(null)).getSpawnLocation());
-            logger.info("Player, " + player.getName() + ", re-located to spawn!");
-        } else {
-            logger.info("Player, " + player.getName() + ", re-location not required!");
+        String worldName = player.getWorld().getName();
+        if (Objects.equal(worldName, "DIM7") || (Objects.equal(worldName, "DIM-777") || (Objects.equal(worldName, "DIM5")))) {
+            World world;
+            if (!Objects.equal( world = Sponge.getServer().getWorld("world").orElse(null), null)) {
+                player.setLocation(world.getSpawnLocation());
+                logger.info("Player, " + player.getName() + ", logged out in the Twilight Forest: Re-locating to spawn...");
+            }
         }
     }
 }
